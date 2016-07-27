@@ -38,6 +38,7 @@ $(document).ready(function(){
 			createDeck(); // Run a function that creates an array of 1H-13C
 			shuffleDeck();
 			cardsDealt = true;
+			$('.dealer-total-number').addClass('hidden-text');
 
 			// Push onto the playersHand array, the new card. then place it in the DOM
 			playersHand.push(theDeck[0]);
@@ -51,7 +52,7 @@ $(document).ready(function(){
 			$('.dealer-cards .card-one').addClass('hidden-text');
 			$('.dealer-cards .card-one').addClass('firstCard');
 			$('.dealer-cards .card-one').children().hide();
-			console.log($('.dealer-cards .card-one').children());
+
 
 			playersHand.push(theDeck[2]);
 			placeCard('player', 'two', theDeck[2]);
@@ -90,7 +91,7 @@ $(document).ready(function(){
 	$('.stand-button').click(function(){
 		// Player clicked on stand, What happens to the player? nothing
 		var slotForNewCard = "";
-		var dealerTotal = calculateTotal(dealersHand, 'dealer');
+		dealerTotal = calculateTotal(dealersHand, 'dealer');
 		while(dealerTotal<17){
 			// Dealerhasless than 17. hit away!
 			if(dealersHand.length == 2){slotForNewCard = "three";}
@@ -118,7 +119,7 @@ function checkWin(){
 	$('.dealer-cards .card-one').removeClass('hidden-text');
 	$('.dealer-cards .card-one').children().show();
 	$('.dealer-cards .card-one').removeClass('firstCard');
-
+	$('.dealer-total-number').removeClass('hidden-text');
 
 	if(playerTotal > 21){
 		// player has busted
@@ -132,6 +133,7 @@ function checkWin(){
 	}else{
 		// Meither player has more than 21
 		if(playerTotal > dealerTotal){
+			console.log(dealerTotal);
 			// Player won. Say this somewhere
 			$('.update-message').html("You beat the dealer");
 		}else if(dealerTotal > playerTotal){
