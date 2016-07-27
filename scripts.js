@@ -1,72 +1,88 @@
 
-// Set messages after game over XXXXXXXXXXX
-// the table/game looks like rob made it. change this/
-// what about those stupid 11, 12, 13
-// what about aces
+
+
+
 // the player can hit forever
 // there is no win counter/bet system
+	// *must place bets before cards are dealt
+	// *various bet amount options
+	// *rolling bank amount
+	// *
+
 // there is no deck to drw from
 // the cards aren't red or black like they should/could be
 // the cards are lame. find images
 // there is no delay on showing the cards... it's instant.
 // you can see the dealers 2nd card on deal. THat's unfair (to the house)
-
+var theBank = 500;
+var theBet = 0;
 var theDeck = [];
 var playersHand = [];
 var dealersHand = [];
 var playerTotal = 0;
 var dealerTotal = 0;
-var topOftheDeck = 5;
-var playerAces = 0;
-var dealerAces = 0;
+var topOftheDeck = 4;
+var cardsDealt = false;
+var firstDealerCard = false;
 // var card-reverse = false;
 
 $(document).ready(function(){
 
+	$('.bet-amounts button').click(function(){
+		placeBet(this);
+		console.log(theBet);
+	});
 
 	$('.deal-button').click(function(){
-		createDeck(); // Run a function that creates an array of 1H-13C
-		shuffleDeck();
+		if(cardsDealt == false){
+			createDeck(); // Run a function that creates an array of 1H-13C
+			shuffleDeck();
+			cardsDealt = true;
 
-		// Push onto the playersHand array, the new card. then place it in the DOM
-		playersHand.push(theDeck[0]);
-		placeCard('player', 'one', theDeck[0]);
+			// Push onto the playersHand array, the new card. then place it in the DOM
+			playersHand.push(theDeck[0]);
+			placeCard('player', 'one', theDeck[0]);
 
-		// playersHand.push('1c');
-		// placeCard('player', 'one', '1c');
+			// playersHand.push('1c');
+			// placeCard('player', 'one', '1c');
 
-		dealersHand.push(theDeck[1]);
-		placeCard('dealer', 'one', theDeck[1]);
+			dealersHand.push(theDeck[1]);
+			placeCard('dealer', 'one', theDeck[1]);
+			$('.dealer-cards .card-one').addClass('hidden-text');
+			$('.dealer-cards .card-one').addClass('firstCard');
+			$('.dealer-cards .card-one').children().hide();
+			console.log($('.dealer-cards .card-one').children());
 
+			playersHand.push(theDeck[2]);
+			placeCard('player', 'two', theDeck[2]);
 
-		playersHand.push(theDeck[2]);
-		placeCard('player', 'two', theDeck[2]);
+			dealersHand.push(theDeck[3]);
+			placeCard('dealer', 'two', theDeck[3]);
 
-		dealersHand.push(theDeck[3]);
-		placeCard('dealer', 'two', theDeck[3]);
-
-		calculateTotal(playersHand, 'player');
-		calculateTotal(dealersHand, 'dealer');
+			calculateTotal(playersHand, 'player');
+			calculateTotal(dealersHand, 'dealer');
+		}
 	})
 
 	$('.hit-button').click(function(){
 		var slotForNewCard = '';
 		var newCard = theDeck[topOftheDeck]
-		if (playersHand.length == 2){slotForNewCard = "three";}
-		else if(playersHand.length == 3){slotForNewCard = "four";}
-		else if(playersHand.length == 4){slotForNewCard = "five";}
-		else if(playersHand.length == 5){slotForNewCard = "six";}
-		placeCard('player', slotForNewCard, theDeck[topOftheDeck]);
-		playersHand.push(theDeck[topOftheDeck]);
-		calculateTotal(playersHand, 'player');
-		topOftheDeck++;
+		if (playerTotal <= 21){
+			if (playersHand.length == 2){slotForNewCard = "three";}
+			else if(playersHand.length == 3){slotForNewCard = "four";}
+			else if(playersHand.length == 4){slotForNewCard = "five";}
+			else if(playersHand.length == 5){slotForNewCard = "six";}
+			placeCard('player', slotForNewCard, theDeck[topOftheDeck]);
+			playersHand.push(theDeck[topOftheDeck]);
+			calculateTotal(playersHand, 'player');
+			topOftheDeck++;
+		}
 		// if(playerTotal > 21 && playerAces > 0){
 		// 	playerTotal = playerTotal - playerAces;
 		// }
 		if(playerTotal > 21){
 			checkWin();
 		}
-		console.log(playerAces);
 	});
 
 
@@ -86,7 +102,9 @@ $(document).ready(function(){
 			dealerTotal = calculateTotal(dealersHand, 'dealer');
 			topOftheDeck++;
 		}
-
+		$('.dealer-cards .card-one').removeClass('hidden-text');
+		$('.dealer-cards .card-one').removeClass('firstCard');
+		$('.dealer-cards .card-one').children().show();
 		// Dealer has at least 17 Check to see who won.
 		checkWin();
 	});
@@ -97,10 +115,16 @@ $(document).ready(function(){
 function checkWin(){
 	// var dealerT = calculateTotal(dealersHand, 'dealer');
 	// var playerT = calculateTotal(playersHand, 'player');
+	$('.dealer-cards .card-one').removeClass('hidden-text');
+	$('.dealer-cards .card-one').children().show();
+	$('.dealer-cards .card-one').removeClass('firstCard');
+
+
 	if(playerTotal > 21){
 		// player has busted
 		// Set a message somewhere that says this
-		$('.update-message').html("You busted"); 
+		$('.update-message').html("You busted");
+
 	}else if(dealerTotal > 21){
 		// Dealer has busted
 		// set a message somewhere that says this
@@ -118,7 +142,26 @@ function checkWin(){
 			// Push. (tie) say this somewhere
 		}
 	}
+	$('.reset-option').html('<button class="reset-button">Reset Game</button>');
+	$('.reset-button').click(function(){
+		adjustBank();
+	});
+
 }
+
+function reset(){
+	theDeck = [];
+	playersHand = [];
+	dealersHand = [];
+	topOftheDeck = 4;
+	$('.card').html('<img src="img/cardBack.jpg">');
+	$('.update-message').html('Good luck');
+	$('.reset-button').remove('.reset-button');
+	calculateTotal(playersHand, 'player');
+	calculateTotal(dealersHand, 'dealer');
+	cardsDealt = false;
+}
+
 
 function placeCard(who, where, cardToPlace){
 
@@ -179,46 +222,98 @@ function shuffleDeck(){
 	}
 }
 
+
 function calculateTotal(hand, whosTurn){
+	var hasAce = false; //initial Ace as false
 	var cardValue = 0;
 	var total = 0;
 	for(var i = 0; i < hand.length; i++){
 		cardValue = Number(hand[i].slice(0, -1))
-		console.log(theAce(hand));
-		if(cardValue == 1 && theAce(hand) == false){
+		if((cardValue == 1) && ((total + 11) <= 21)){
+			//This card is an Ace!! Check if 11 will fit. If not, it's a 1
 			cardValue = 11;
-			// playerAces += 10;
+			hasAce = true;
 		}else if(cardValue > 10){
 			cardValue = 10;
+		}else if(((cardValue + total) > 21) && hasAce){
+			total = total - 10;
+			hasAce = false;
 		}
 		total += cardValue;
 	}
 	if (whosTurn == 'player'){
 		playerTotal = total;
 	}
-	if(cardValue == 1 && theAce(hand) == true){
-		cardValue = 1;
-	}
 
-	console.log(playerAces);
 	// Update the html with the new total
 	var elementToUpdate = '.'+whosTurn+'-total-number';
 	$(elementToUpdate).html(total);
 	return total;
 }
 
-function theAce(hand){
-	var aceFound = false;
-	for(var i = 0; i < hand.length; i++){
-		// console.log(parseInt(playersHand[i]));
-		if((playerTotal + 11) > 21 && parseInt(hand[i]) == 1){
-			aceFound = true;
+function placeBet(betButton){
+	// var fiveD = $('.dollar5').attr("value");
+	// var tenD = $('.dollar10').attr("value");
+	// var fiftyD = $('.dollar50').attr("value");
+	// var hundoD = $('.dollar100').attr("value");
+
+	if(cardsDealt == false  && theBank > 0){
+		var bet = $(betButton).attr("value");
+
+		if(bet == "5"){
+			theBank -= 5;
+			theBet += 5;
+		}else if(bet == "10"){
+			theBank -= 10;
+			theBet += 10;
+		}else if(bet == "50"){
+			theBank -= 50;
+			theBet += 50;
+		}else if(bet == "100"){
+			theBank -= 100;
+			theBet += 100;
 		}
-		return aceFound;
 	}
+
+	$('.bank').html('Bank: $'+theBank);
+	$('.yourBet').html('YourBet: $'+theBet);
 }
 
-
+function adjustBank(){
+	if(playerTotal > 21){
+		// player has busted
+		// Set a message somewhere that says this
+		theBet = 0;
+		$('.yourBet').html('yourBet: $'+theBet);
+	}else if(dealerTotal > 21){
+		// Dealer has busted
+		// set a message somewhere that says this
+		theBank = theBank + (theBet * 2);
+		theBet = 0;
+		$('.bank').html('Bank: $'+theBank);
+		$('.yourBet').html('YourBet: $'+theBet);
+	}else{
+		// Meither player has more than 21
+		if(playerTotal > dealerTotal){
+			// Player won. Say this somewhere
+			theBank = theBank + (theBet * 2);
+			theBet = 0;
+			$('.bank').html('Bank: $'+theBank);
+			$('.yourBet').html('YourBet: $'+theBet);			
+		}else if(dealerTotal > playerTotal){
+			// Dealer won. say this somewhere
+			theBet = 0;
+			$('.yourBet').html('yourBet: $'+theBet);
+		}else{
+			theBank = theBank + theBet;
+			theBet = 0;
+			$('.bank').html('Bank: $'+theBank);
+			$('.yourBet').html('YourBet: $'+theBet);			
+			// Push. (tie) say this somewhere
+		}
+	}
+	reset();
+}
 
 
 
