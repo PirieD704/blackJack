@@ -2,12 +2,6 @@ body {
 	background-image: url('img/saloon.png');
 }
 
-.dollar5{
-	background-image: url('img/redChip.png');
-	background-size: 100% 100%;
-}
-
-
 .yourBet{
 	text-align: center;
 	font-size: 30px;
