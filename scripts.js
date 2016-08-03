@@ -68,7 +68,9 @@ $(document).ready(function(){
 	$('.hit-button').click(function(){
 		var slotForNewCard = '';
 		var newCard = theDeck[topOftheDeck]
-		if (playerTotal <= 21){
+		if (playerTotal >= 21){
+			$(".stand-button").trigger("click");
+		}else if(playerTotal <= 21){
 			if (playersHand.length == 2){slotForNewCard = "three";}
 			else if(playersHand.length == 3){slotForNewCard = "four";}
 			else if(playersHand.length == 4){slotForNewCard = "five";}
@@ -81,9 +83,12 @@ $(document).ready(function(){
 		// if(playerTotal > 21 && playerAces > 0){
 		// 	playerTotal = playerTotal - playerAces;
 		// }
-		if(playerTotal > 21){
-			checkWin();
+		if(playerTotal >= 21){
+			$(".stand-button").trigger("click");
 		}
+		// if(playerTotal > 21){
+		// 	checkWin();
+		// }
 	});
 
 
@@ -320,7 +325,9 @@ function adjustBank(){
 
 
 
-
+		// if (playerTotal == 21){
+		// 	checkWin();
+		// }else 
 
 
 
