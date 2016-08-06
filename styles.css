@@ -36,10 +36,11 @@ body {
 	height: 120px;
 	background-color: #fff;
 	color: black;
-	width: 13%;
-	margin: 5px;
+	width: 100%;
+	margin: 0px;
 	padding: 0px;
 	border-radius: 4%;
+	transform: rotateY(180deg);
 }
 
 .firstCard {
@@ -63,6 +64,10 @@ body {
 	color: white;
 	width: 90%;
 	margin-top: 10px;
+}
+
+.player-cards{
+	margin-top: 5px;
 }
 
 .update-message{
