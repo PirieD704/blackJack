@@ -126,6 +126,7 @@ function checkWin(){
 	$('.dealer-cards .card-one').removeClass('firstCard');
 	$('.dealer-total-number').removeClass('hidden-text');
 
+
 	if(playerTotal > 21){
 		// player has busted
 		// Set a message somewhere that says this
@@ -174,6 +175,7 @@ function placeCard(who, where, cardToPlace){
 
 	var classSelector = '.'+who+'-cards .card-'+where;
 
+
 	var cardPass = cardToPlace.slice(0, -1);
 	if (cardPass == 11){
 		cardPass = "J";
@@ -197,6 +199,9 @@ function placeCard(who, where, cardToPlace){
 	}else if (cardToPlace.indexOf('s') > -1){
 		$(classSelector).append('<img style="width:30px;height:30px;display:block;margin:auto;" src="img/spade.jpg">');
 	}
+
+	$(classSelector).html('<img src="'+cardToPlace+'.png">');
+
 }
 
 function createDeck(){
@@ -236,6 +241,9 @@ function calculateTotal(hand, whosTurn){
 	var total = 0;
 	for(var i = 0; i < hand.length; i++){
 		cardValue = Number(hand[i].slice(0, -1))
+
+		console.log(theAce());
+
 		if((cardValue == 1) && ((total + 11) <= 21)){
 			//This card is an Ace!! Check if 11 will fit. If not, it's a 1
 			cardValue = 11;
@@ -281,6 +289,19 @@ function placeBet(betButton){
 			theBet += 100;
 		}
 	}
+
+// function theAce(array){
+
+// 	for(var i = 0; i < playersHand.length; i++){
+// 		// console.log(parseInt(playersHand[i]));
+// 		if((playerTotal > 21) && (parseInt(playersHand[i]) == 1)){
+// 			return true;
+// 		}else {
+// 			return false;
+// 		}
+// 	}
+// }
+
 
 	$('.bank').html('Bank: $'+theBank);
 	$('.yourBet').html('YourBet: $'+theBet);
