@@ -200,7 +200,7 @@ function placeCard(who, where, cardToPlace){
 		$(classSelector).append('<img style="width:30px;height:30px;display:block;margin:auto;" src="img/spade.jpg">');
 	}
 
-	$(classSelector).html('<img src="'+cardToPlace+'.png">');
+	// $(classSelector).html('<img src="'+cardPass+'.png">');
 
 }
 
@@ -241,8 +241,6 @@ function calculateTotal(hand, whosTurn){
 	var total = 0;
 	for(var i = 0; i < hand.length; i++){
 		cardValue = Number(hand[i].slice(0, -1))
-
-		console.log(theAce());
 
 		if((cardValue == 1) && ((total + 11) <= 21)){
 			//This card is an Ace!! Check if 11 will fit. If not, it's a 1
